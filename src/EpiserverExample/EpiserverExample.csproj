@@ -1,0 +1,88 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>EpiserverExample</PackageId>
+    <Authors>Enter author name(s)</Authors>
+    <Company>Enter Company Name</Company>
+    <PackageDescription>Enter package description</PackageDescription>
+    <!--follow semantic versioning may include prelease information too-->
+    <PackageVersion>0.1.0</PackageVersion>
+    <!--leave releasenotes blank to read in from releasenotes.txt-->
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageTags>episerver example</PackageTags>
+    <!--set urls as needed-->
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/bmcdavid/ExampleNuGetPackages/master/license.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://raw.githubusercontent.com/bmcdavid/ExampleNuGetPackages</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/bmcdavid/ExampleNuGetPackages/master/nuget.png</PackageIconUrl>
+
+    <!--Target both full framework and netstandard to simplify installation, Epi 11 requires net461 or higher-->
+    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+
+    <!--Provide intellisense for developers-->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!--set this to true if the package contains an add-on module, the condition is to only run once -->
+    <EpiModuleFolderName>$(PackageId)</EpiModuleFolderName>
+    <EpiModulePackagePath>.\Content\modules\_protected\$(PackageId)</EpiModulePackagePath>
+
+    <!--useful to allow others to debug -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+
+    <!--########## Do not edit properties below unless you understand what they are doing! ##########-->
+
+    <!--get info for appveyor builds-->
+    <CIBuildNumber Condition="'$(APPVEYOR)' == 'True'">$(APPVEYOR_BUILD_NUMBER)</CIBuildNumber>
+    <RepositoryBranch Condition="'$(APPVEYOR)' == 'True'">$(APPVEYOR_REPO_BRANCH)</RepositoryBranch>
+    <RepositoryCommit Condition="'$(APPVEYOR)' == 'True'">$(APPVEYOR_REPO_COMMIT)a</RepositoryCommit>
+
+    <!--otherwise use VSTS-->
+    <CIBuildNumber Condition="'$(BUILD_SOURCEVERSION)' != ''">$(BUILD_BUILDNUMBER)</CIBuildNumber>
+    <RepositoryBranch Condition="'$(BUILD_SOURCEVERSION)' != ''">$(BUILD_SOURCEVERSION)</RepositoryBranch>
+    <RepositoryCommit Condition="'$(BUILD_SOURCEVERSION)' != ''">$(BUILD_SOURCEBRANCHNAME)a</RepositoryCommit>
+
+    <Version Condition="'$(CIBuildNumber)' != ''">$(PackageVersion) Commit: $(RepositoryCommit) Branch: $(RepositoryBranch) Build: $(CIBuildNumber)</Version>
+    <Version Condition="'$(CIBuildNumber)' == ''">$(PackageVersion)</Version>
+    <Copyright>Copyright $([System.DateTime]::Now.ToString(yyyy))</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="readme.txt" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <!-- target to insert releasenotes.txt into package-->
+  <Target Name="AddReleaseNotes" BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <ReleaseNotesPath Condition="'$(ReleaseNotesPath)' == ''">releasenotes.txt</ReleaseNotesPath>
+      <ReleaseNotes Condition="'$(PackageReleaseNotes)' == ''">$([System.IO.File]::ReadAllText($(ReleaseNotesPath)))</ReleaseNotes>
+      <PackageReleaseNotes Condition="'$(PackageReleaseNotes)' == ''">$(ReleaseNotes)</PackageReleaseNotes>
+    </PropertyGroup>
+
+    <Message Importance="high" Condition="'$(ReleaseNotes)' != ''" Text="Added release notes: $(ReleaseNotes)" />
+  </Target>
+
+  <!--target to zip module folder-->
+  <Target Name="CreateEpiserverModule" BeforeTargets="_GetPackageFiles">
+    <PropertyGroup>
+      <ModuleName>$(EpiModuleFolderName)</ModuleName>
+      <ZipFile>bin\$(EpiModuleFolderName).zip</ZipFile>
+      <BuildEvent>
+        powershell.exe -nologo -noprofile -ExecutionPolicy Bypass -command "&amp; { if (Test-Path $(ZipFile)) { Remove-Item $(ZipFile) } }"
+        powershell.exe -nologo -noprofile -ExecutionPolicy Bypass -command "&amp; { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('$(EpiModuleFolderName)', '$(ZipFile)'); }"
+      </BuildEvent>
+      <EpiModulePackagePath Condition="'$(EpiModulePackagePath)' == ''">.\Content\modules\_protected\$(EpiModuleFolderName)</EpiModulePackagePath>
+    </PropertyGroup>
+
+    <Exec Command="$(BuildEvent)" Condition="'$(EpiModuleFolderName)' != ''" />
+
+    <ItemGroup>
+      <None Include="$(ModuleName)\*.config" Condition="'$(EpiModuleFolderName)' != ''" pack="true" PackagePath="$(EpiModulePackagePath)" />
+      <None Include="$(ZipFile)" Condition="'$(EpiModuleFolderName)' != ''" pack="true" PackagePath="$(EpiModulePackagePath)" />
+    </ItemGroup>
+
+    <Message Importance="high" Text="Created module in $(EpiModulePackagePath)" />
+  </Target>
+</Project>

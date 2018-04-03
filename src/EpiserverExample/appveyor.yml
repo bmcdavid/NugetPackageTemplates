@@ -1,0 +1,11 @@
+﻿image: Visual Studio 2017
+configuration: Release
+platform: Any CPU
+before_build:
+- cmd: nuget restore
+build:
+  verbosity: minimal
+after_test:
+- cmd: dotnet pack    
+artifacts:
+  - path: '*.nupkg'
