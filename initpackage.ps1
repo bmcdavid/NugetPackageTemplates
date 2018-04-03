@@ -15,7 +15,7 @@ function Main
 	}	
 	
 	$include = @('*.cs', '*.sln', '*.csproj')
-	$folders = Get-ChildItem -Path $projectFolder  | ?{ $_.PSIsContainer }	
+	$folders = Get-ChildItem -Path $projectFolder -Recurse  | sort @{expression = {$_.fullname.length}} -descending | ?{ $_.PSIsContainer }
 	$check = $false
 
 	foreach($folder in $folders) 
