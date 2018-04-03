@@ -6,6 +6,6 @@ before_build:
 build:
   verbosity: minimal
 after_test:
-- cmd: dotnet pack --output ${APPVEYOR_BUILD_FOLDER}  
+- cmd: dotnet pack --output $(APPVEYOR_BUILD_FOLDER)
 artifacts:
   - path: '*.nupkg'
