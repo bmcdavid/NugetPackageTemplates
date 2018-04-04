@@ -14,7 +14,7 @@ function Main
 		$packageName = Read-Host "Please enter a package name (ex: SuperAwesomePackage, no abbreviations please) in PascalCase"
 	}
 	
-	$slnFiles = Get-ChildItem -Path $projectFolder -Filter *.slntemplate
+	$slnFiles = Get-ChildItem -Path $projectFolder -Filter *.solutiontemplate
 	foreach($sln in $slnFiles)
 	{
 		Rename-Item -path $sln.FullName -newName "$packageName.sln"
