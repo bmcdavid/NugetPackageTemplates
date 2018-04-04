@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\targets\AddReleaseNotes.targets" />
+  <Import Project="..\targets\AddReadmeMarkdown.targets" />
   <Import Project="..\targets\ZipEpiserverModule.targets" />
   <Import Project="..\targets\CommonBuild.props" />
 
@@ -23,12 +24,15 @@
     <PackageProjectUrl>https://raw.githubusercontent.com/bmcdavid/ExampleNuGetPackages</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/bmcdavid/ExampleNuGetPackages/master/nuget.png</PackageIconUrl>
 
+    <!--adds readme.md as readme.txt in package-->
+    <IncludeReadMeMarkdown>true</IncludeReadMeMarkdown>
+
     <!--Provide intellisense for developers-->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <!--set this to true if the package contains an add-on module, the condition is to only run once -->
-    <EpiModuleFolderName>$(PackageId)</EpiModuleFolderName>
-    <EpiModulePackagePath>.\Content\modules\_protected\$(PackageId)</EpiModulePackagePath>
+    <!--uncomment these lines to create a zipped add on module -->
+    <!--<EpiModuleFolderName>$(PackageId)</EpiModuleFolderName>-->
+    <!--<EpiModulePackagePath>.\Content\modules\_protected\$(PackageId)</EpiModulePackagePath>-->
 
     <!--useful to allow others to debug -->
     <IncludeSymbols>true</IncludeSymbols>
@@ -44,7 +48,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="readme.txt" pack="true" PackagePath="." />
+    <None Include=".template.config\template.json" />
+    <Content Include="web.config.transform" Condition="'$(EpiModuleFolderName)' != ''" pack="true" />
   </ItemGroup>
 
   <ItemGroup>

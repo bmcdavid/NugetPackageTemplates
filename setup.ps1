@@ -1,10 +1,10 @@
 #
-# initpackage.ps1
+# setup.ps1
 #
 param(
 	[string]$packageName,
 	[string]$projectFolder = ".",
-	[string]$placeHolder = "EpiserverExample"
+	[string]$placeHolder = "nothing"
 )
 
 function Main 
@@ -25,7 +25,7 @@ function Main
 			$oldFolderName = $folder.Name
 			$newFolderName = $oldFolderName.Replace($placeHolder, $packageName)
 			$newFolderPath = $folder.FullName.Replace($oldFolderName, $newFolderName)						
-			Rename-Item -path $folder.FullName -newName $newFolderPath
+			Rename-Item -path $folder.FullName -newName $newFolderName
 			Write-Host "Moved " $folder.FullName " to " $newFolderPath			
 		}
 	}

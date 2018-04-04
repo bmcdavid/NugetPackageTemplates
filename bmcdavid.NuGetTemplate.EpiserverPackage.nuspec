@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>bmcdavid.NuGetTemplate.EpiserverPackage</id>
+    <version>1.0.0</version>
+    <description>
+      Creates Episerver Package
+    </description>
+    <authors>Brad McDavid</authors>
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src="sln-files\bmcdavid.NuGetTemplate.EpiserverPackage.sln" target="Content" />
+    <file src="*" exclude="NugetPackageTemplates.sln;*.nuspec" target="Content" />
+    <file src=".nuget\*" target="Content\.nuget" />
+    <file src="src\EpiserverTemplate\.template.config\*" target="Content\.template.config" />
+    <file src="src\EpiserverTemplate\**\*.*" exclude="**\*.user;**\bin\**\*.*;src\**\obj\**\*.*;**\.template.config\*" target="Content\src\EpiserverTemplate" />
+    <file src="tests\EpiserverTemplateTests\**\*.*" exclude="**\bin\**\*.*;**\obj\**\*.*" target="Content\tests\EpiserverTemplateTests" />
+    <file src="src\targets\*" target="Content\src\targets" />
+  </files>
+</package>

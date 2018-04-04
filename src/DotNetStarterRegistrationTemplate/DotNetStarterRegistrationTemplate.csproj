@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\targets\AddReleaseNotes.targets" />
+  <Import Project="..\targets\AddReadmeMarkdown.targets" />
   <Import Project="..\targets\CommonBuild.props" />
 
   <PropertyGroup>
@@ -22,6 +23,9 @@
     <PackageProjectUrl>https://raw.githubusercontent.com/bmcdavid/ExampleNuGetPackages</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/bmcdavid/ExampleNuGetPackages/master/nuget.png</PackageIconUrl>
 
+    <!--adds readme.md as readme.txt in package-->
+    <IncludeReadMeMarkdown>true</IncludeReadMeMarkdown>
+
     <!--Provide intellisense for developers-->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
@@ -37,10 +41,6 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="readme.txt" pack="true" PackagePath="." />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DotNetStarter.RegistrationAbstractions" Version="1.1.0" />

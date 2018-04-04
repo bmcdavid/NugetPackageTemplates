@@ -1,0 +1,7 @@
+<configuration>
+    <episerver.shell>
+        <protectedModules>
+            <add name="EpiserverTemplate" />
+        </protectedModules>
+    </episerver.shell>
+</configuration>

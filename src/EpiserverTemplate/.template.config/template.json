@@ -1,0 +1,27 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Brad McDavid",
+  "classifications": [ "NuGet", "Episerver" ],
+  "tags": {
+    "language": "C#"
+  },
+  "identity": "bmcdavid.NuGetTemplate.EpiserverPackage",
+  "name": "Episerver Package Template",
+  "shortName": "episerverpackage",
+  "postActions": [
+    {
+      "actionId": "3A7C4B45-1F5D-4A30-959A-51B88E82B5D2",
+      "args": {
+        "executable": "setup.ps1",
+        "args": ""
+      },
+      "manualInstructions": [
+        {
+          "text": "Run '.\\setup.ps1 -placeholder EpiserverTemplate'"
+        }
+      ],
+      "continueOnError": true,
+      "description ": "setups the project by calling setup.ps1"
+    }
+  ]
+}
