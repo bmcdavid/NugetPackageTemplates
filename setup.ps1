@@ -12,7 +12,14 @@ function Main
 	if (!$packageName) 
 	{
 		$packageName = Read-Host "Please enter a package name (ex: SuperAwesomePackage, no abbreviations please) in PascalCase"
-	}	
+	}
+	
+	$slnFiles = Get-ChildItem -Path $projectFolder -Filter *.slntemplate
+	foreach($sln in $slnFiles)
+	{
+		Rename-Item -path $sln.FullName -newName "$packageName.sln"
+		Write-Host "Renamed " $sln.FullName " to $packageName.sln"
+	}
 	
 	$include = @('*.cs', '*.sln', '*.csproj')
 	$folders = Get-ChildItem -Path $projectFolder -Recurse  | sort @{expression = {$_.fullname.length}} -descending | ?{ $_.PSIsContainer }
